@@ -11,6 +11,7 @@ const cities=['Seoul', 'New York', 'Tokyo', 'Paris', 'London', 'Hong Kong', 'Bra
 function App() {
     const [weather, setWeather] = useState(null);
     const [city, setCity] = useState(null);
+    const [loading, setLoading] = useState(false);
     const apiKey = process.env.REACT_APP_WEATHER_KEY;
 
     const getCurrentLocation = () => {
@@ -23,6 +24,7 @@ function App() {
 
     const getWeatherByCurrentLocation = async (lat, lon) => {
         const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
+        setLoading(true);
 
         try {
             const response = await fetch(url);
@@ -31,6 +33,7 @@ function App() {
             }
             const data = await response.json();
             setWeather(data);
+            setLoading(false);
         } catch (error) {
             console.error("Fetch Data Error :", error);
         }
@@ -38,6 +41,7 @@ function App() {
 
     const getWeatherByCity = async (city) => {
         const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+        setLoading(true);
 
         try {
             const response = await fetch(url);
@@ -46,6 +50,7 @@ function App() {
             }
             const data = await response.json();
             setWeather(data);
+            setLoading(false);
         } catch (error) {
             console.error("Fetch Data Error :", error);
         }
@@ -54,7 +59,14 @@ function App() {
     useEffect(() => {
         getCurrentLocation();
     }, []);
-    console.log(weather);
+
+    useEffect(() => {
+        if(city === null) {
+            getCurrentLocation();
+        } else {
+            getWeatherByCity(city);
+        }
+    }, [city]);
     
     return (
         <div
@@ -70,7 +82,7 @@ function App() {
             }
         >
             <h1>What is the weather like?</h1>
-            <WeatherBox weather={weather} />
+            <WeatherBox weather={weather} loading={loading} />
             <ButtonBox
                 getCurrentLocation={getCurrentLocation}
                 cities={cities}

@@ -20,7 +20,6 @@ const ButtonBox = ({
     const handleCityLi = (city) => {
         setCity(city);
         setIsOpen(prev => !prev);
-        getWeatherByCity(city);
     };
     
     return (
@@ -39,7 +38,7 @@ const ButtonBox = ({
                     className={isOpen ? 'open' : ''}
                 >
                     {
-                        cities.map((i) => <li onClick={() => {handleCityLi(i)}}>{i}</li>)
+                        cities.map((i, index) => <li onClick={() => {handleCityLi(i)}} key={index}>{i}</li>)
                     }
                 </ul>
             </LocationList>

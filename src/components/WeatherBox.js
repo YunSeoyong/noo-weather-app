@@ -2,8 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import { FaMapMarkerAlt } from "react-icons/fa";
 
-const WeatherBox = ({ weather }) => {
-    if (weather) {
+const WeatherBox = ({ weather, loading }) => {
+    if (!loading) {
         return (
             <WeatherBoxWrap>
                 <Location>
